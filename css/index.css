@@ -51,7 +51,7 @@ body {
   background-repeat: no-repeat;
 }
 .slide-left {
-  top: 3.3rem;
+  top: 2.8rem;
   height: .5rem;
   width: 50%;
   background-image: url("../imgs/slide_left.svg");
@@ -59,7 +59,7 @@ body {
   background-repeat: no-repeat;
 }
 .footer {
-  bottom: 0;
+  bottom: .2rem;
   height: .2rem;
   width: 50%;
   background-image: url("../imgs/madebychuangkit.svg");
