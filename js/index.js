@@ -7,38 +7,38 @@ require(['jquery', 'b', 'barrager'], function($, b, barrager) {
         $(".line-1").animate({
           top:'.5rem',
           opacity: '1'
-        });
-      },200);
+        },"slow");
+      },300);
       setTimeout(function () {
         $(".line-2").animate({
           top:'.9rem',
           opacity: '1'
-        });
-      },300);
+        },"slow");
+      },600);
       setTimeout(function () {
         $(".line-3").animate({
           top:'1.4rem',
           opacity: '1'
-        });
-      },400);
+        },"slow");
+      },900);
       setTimeout(function () {
         $(".line-4").animate({
           top:'1.8rem',
           opacity: '1'
-        });
-      },500);
+        },"slow");
+      },1200);
       setTimeout(function () {
         $(".slide-left").animate({
-          top:'2.8rem',
+          // top:'2.8rem',
           opacity: '1'
-        });
-      },100);
+        },"slow");
+      },2000);
       setTimeout(function () {
         $(".footer").animate({
-          bottom:'.2rem',
+          // bottom:'.2rem',
           opacity: '1'
-        });
-      },100);
+        },"slow");
+      },2000);
     });
     document.addEventListener('touchstart', touch, false);
     document.addEventListener('touchmove', touch, false);
