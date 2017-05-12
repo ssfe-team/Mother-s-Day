@@ -27,17 +27,20 @@ require(['jquery', 'b', 'barrager'], function($, b, barrager) {
     $('.mask').click(function() {
         $(this).fadeOut();
         $('.answer-wrap').fadeOut();
+        $('.answer-btn').removeClass('active');
     });
 
     $('.answer-btn').click(function() {
         $('.answer-wrap, .mask').fadeIn();
         $('#answerInput').focus();
+        $(this).addClass('active');
     });
 
     $('.send-btn').click(function() {
         var answer = $(this).prev().val();
         if (answer.length > 0) {
             saveAnswer(answer);
+            $('.answer-btn').removeClass('active');
         }
     });
 
@@ -54,6 +57,7 @@ require(['jquery', 'b', 'barrager'], function($, b, barrager) {
         if (event.keyCode == 13) {
             $(this).next().click();
             $(this).blur();
+            $('.answer-btn').removeClass('active');
         }
     });
 
@@ -252,11 +256,13 @@ require(['jquery', 'b', 'barrager'], function($, b, barrager) {
                 window.touchX = event.touches[0].clientX;
                 break;
             case "touchend":
-                if ((event.changedTouches[0].clientX - window.touchX) < -15) {
+                if ((event.changedTouches[0].clientX - window.touchX) < -22) {
                     hideBarrage();
                     window.questionIndex++;
                     if (window.questionIndex < window.questionList.length) {
                         // console.log('下一张');
+                        $('#mask').fadeOut();
+                        $('.answer-wrap').fadeOut();
                         $('.question-wrap').css('background-image', 'url(' + window.questionList[window.questionIndex].imgUrl + ')');
                         $('.answer-wrap').val('').fadeOut().next().removeClass('active');
                         clearTimeout(window.showBarrageClock);
@@ -264,9 +270,11 @@ require(['jquery', 'b', 'barrager'], function($, b, barrager) {
                     } else {
                         window.location.href = 'share.html';
                     }
-                } else if ((event.changedTouches[0].clientX - window.touchX) > 15) {
+                } else if ((event.changedTouches[0].clientX - window.touchX) > 22) {
                     hideBarrage();
                     window.questionIndex--;
+                    $('#mask').fadeOut();
+                    $('.answer-wrap').fadeOut();
                     if (window.questionIndex >= 0) {
                         $('.question-wrap').css('background-image', 'url(' + window.questionList[window.questionIndex].imgUrl + ')');
                         $('.answer-wrap').val('').fadeOut().next().removeClass('active');
@@ -283,6 +291,17 @@ require(['jquery', 'b', 'barrager'], function($, b, barrager) {
                 break;
         }
     }
+
+    // var mask = document.getElementById('mask');
+    // mask.addEventListener('touchstart', maskTouch, false);
+    // mask.addEventListener('touchmove', maskTouch, false);
+    // mask.addEventListener('touchend', maskTouch, false);
+
+    // function maskTouch(event) {
+    //     var event = event || window.event;
+    //     event.preventDefault();
+    //     return false;
+    // }
 
     setFontSize();
     $('body').css('min-height', winHeight + 'px');

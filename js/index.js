@@ -3,6 +3,42 @@ require(['jquery', 'b', 'barrager'], function($, b, barrager) {
         // 绑定页面的resize事件以在变化时更新html的font-size
         $(window).resize(setFontSize);
         checkLogin(); // 获取用户登录信息
+      setTimeout(function () {
+        $(".line-1").animate({
+          top:'.5rem',
+          opacity: '1'
+        });
+      },200);
+      setTimeout(function () {
+        $(".line-2").animate({
+          top:'.9rem',
+          opacity: '1'
+        });
+      },300);
+      setTimeout(function () {
+        $(".line-3").animate({
+          top:'1.4rem',
+          opacity: '1'
+        });
+      },400);
+      setTimeout(function () {
+        $(".line-4").animate({
+          top:'1.8rem',
+          opacity: '1'
+        });
+      },500);
+      setTimeout(function () {
+        $(".slide-left").animate({
+          top:'2.8rem',
+          opacity: '1'
+        });
+      },100);
+      setTimeout(function () {
+        $(".footer").animate({
+          bottom:'.2rem',
+          opacity: '1'
+        });
+      },100);
     });
     document.addEventListener('touchstart', touch, false);
     document.addEventListener('touchmove', touch, false);
