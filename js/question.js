@@ -1,5 +1,156 @@
-require(['jquery', 'b', 'barrager'], function($, b, barrager) {
+require(['jquery', 'b', 'barrager','wxjsapi'], function($, b, barrager, wx) {
 
+  var wxConfig = {
+    debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+    appId: '', // 必填，公众号的唯一标识
+    timestamp: '', // 必填，生成签名的时间戳
+    nonceStr: '', // 必填，生成签名的随机串
+    signature: '',// 必填，签名，见附录1
+    jsApiList: [
+      'checkJsApi',
+      'onMenuShareTimeline',
+      'onMenuShareAppMessage',
+      'onMenuShareQQ',
+      'onMenuShareWeibo',
+      'onMenuShareQZone',
+      'hideMenuItems',
+      'showMenuItems',
+      'hideAllNonBaseMenuItem',
+      'showAllNonBaseMenuItem',
+      'translateVoice',
+      'startRecord',
+      'stopRecord',
+      'onVoiceRecordEnd',
+      'playVoice',
+      'onVoicePlayEnd',
+      'pauseVoice',
+      'stopVoice',
+      'uploadVoice',
+      'downloadVoice',
+      'chooseImage',
+      'previewImage',
+      'uploadImage',
+      'downloadImage',
+      'getNetworkType',
+      'openLocation',
+      'getLocation',
+      'hideOptionMenu',
+      'showOptionMenu',
+      'closeWindow',
+      'scanQRCode',
+      'chooseWXPay',
+      'openProductSpecificView',
+      'addCard',
+      'chooseCard',
+      'openCard'
+    ] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+  };
+  $.ajax({
+    url: "/login/getWxDyhJsApiConfig.do",
+    dataType: "json",
+    type: "GET",
+    success: function(data) {
+      wxConfig.appId = data.appId;
+      wxConfig.timestamp = data.timestamp;
+      wxConfig.nonceStr = data.nonceStr;
+      wxConfig.signature = data.signature;
+      wx.config(wxConfig);
+    },
+    error: function() {
+      console.log("请求config失败");
+    }
+  });
+  //wx.config(wxConfig);
+  wx.ready(function(){
+    // config信息验证后会执行ready方法，所有接口调用都必须在config接口获得结果之后，
+    // config是一个客户端的异步操作，所以如果需要在页面加载时就调用相关接口，则须把相关接口放在ready函数中调用来确保正确执行。
+    // 对于用户触发时才调用的接口，则可以直接调用，不需要放在ready函数中。
+    wx.checkJsApi({
+      jsApiList: ['onMenuShareAppMessage','onMenuShareTimeline'], // 需要检测的JS接口列表，所有JS接口列表见附录2,
+      success: function(res) {
+        console.log('suc');
+        console.log(JSON.stringify(res));
+        // 以键值对的形式返回，可用的api值true，不可用为false
+        // 如：{"checkResult":{"chooseImage":true},"errMsg":"checkJsApi:ok"}
+      }
+    });
+    // 2.2 监听“分享到朋友圈”按钮点击、自定义分享内容及分享结果接口
+    wx.onMenuShareAppMessage({
+      title: '她不在你的城市，在你的心里吗？',
+      desc: '她的世界很小，只装满了你。你的世界很大，却常忽略了她',
+      link: 'https://www.chuangkit.com/mod/activity/motherday/index.html',
+      imgUrl: 'https://imgpub.chuangkit.com/barrageImg/share.jpg@100w',
+      trigger: function (res) {
+        //不要尝试在trigger中使用ajax异步请求修改本次分享的内容，因为客户端分享操作是一个同步操作，这时候使用ajax的回包会还没有返回
+        //alert('用户点击发送给朋友');
+      },
+      success: function (res) {
+        //alert('已分享');
+      },
+      cancel: function (res) {
+        //alert('已取消');
+      },
+      fail: function (res) {
+        //alert(JSON.stringify(res));
+      }
+    });
+    // alert('已注册获取“发送给朋友”状态事件');
+
+    // 2.2 监听“分享到朋友圈”按钮点击、自定义分享内容及分享结果接口
+
+    wx.onMenuShareTimeline({
+      title: '她不在你的城市，在你的心里吗？',
+      link: 'https://www.chuangkit.com/mod/activity/motherday/index.html',
+      imgUrl: 'https://imgpub.chuangkit.com/barrageImg/share.jpg@100w',
+      trigger: function (res) {
+        // 不要尝试在trigger中使用ajax异步请求修改本次分享的内容，因为客户端分享操作是一个同步操作，这时候使用ajax的回包会还没有返回
+        //alert('用户点击分享到朋友圈');
+      },
+      success: function (res) {
+        //alert('已分享');
+      },
+      cancel: function (res) {
+        //alert('已取消');
+      },
+      fail: function (res) {
+        //alert(JSON.stringify(res));
+      }
+    });
+    // alert('已注册获取“分享到朋友圈”状态事件');
+  });
+  wx.error(function (res) {
+    // alert(res.errMsg);
+  });
+
+    var bgm = document.getElementById('bgm');
+
+    function audioAutoPlay(id){
+      var audio = document.getElementById(id);
+      audio.play();
+      document.addEventListener("WeixinJSBridgeReady", function () {
+        audio.play();
+      }, false);
+      document.addEventListener('YixinJSBridgeReady', function() {
+        audio.play();
+      }, false);
+    }
+    audioAutoPlay('bgm');
+
+  bgm.load();
+  bgm.oncanplay = function() {
+    bgm.play();
+  };
+
+  function wocao() {
+    this.play();
+  }
+  
+  /*
+  bgm.addEventListener('canplay', function() {
+    alert('asdasd');
+    bgm.play();
+  });*/
+  
     // 获取用户登录信息
     $.ajax({
         url: "/user/getUserInfo.do",
@@ -79,7 +230,11 @@ require(['jquery', 'b', 'barrager'], function($, b, barrager) {
                     for (var i = 0; i < window.questionList.length; i++) {
                         $img = $('<img src="' + window.questionList[i].imgUrl + '" class="hide" />');
                         $body.append($img);
+                        var div = $('<div></div>');
+                        div.css('background-image', 'url(' + window.questionList[i].imgUrl + ')')
+                        $('.background-wrap').append(div);
                     }
+
                 } else if (data.code == -1) {
                     window.location.href = 'index.html';
                 } else if (data.code == -2) {
@@ -264,6 +419,9 @@ require(['jquery', 'b', 'barrager'], function($, b, barrager) {
                         $('#mask').fadeOut();
                         $('.answer-wrap').fadeOut();
                         $('.question-wrap').css('background-image', 'url(' + window.questionList[window.questionIndex].imgUrl + ')');
+                        $('.background-wrap').animate({
+                          'left': $('.background-wrap').children().width() * -1 * window.questionIndex
+                        }, 800);
                         $('.answer-wrap').val('').fadeOut().next().removeClass('active');
                         clearTimeout(window.showBarrageClock);
                         getBarrage();
@@ -278,6 +436,9 @@ require(['jquery', 'b', 'barrager'], function($, b, barrager) {
                     if (window.questionIndex >= 0) {
                         $('.question-wrap').css('background-image', 'url(' + window.questionList[window.questionIndex].imgUrl + ')');
                         $('.answer-wrap').val('').fadeOut().next().removeClass('active');
+                        $('.background-wrap').animate({
+                          'left': $('.background-wrap').children().width() * -1 * window.questionIndex
+                        }, 800);
                         clearTimeout(window.showBarrageClock);
                         getBarrage();
                     } else {
@@ -304,7 +465,7 @@ require(['jquery', 'b', 'barrager'], function($, b, barrager) {
     // }
 
     setFontSize();
-    $('body').css('min-height', winHeight + 'px');
+    //$('body').css('min-height', winHeight + 'px');
 
     $(window).resize(setFontSize);
 
@@ -312,5 +473,16 @@ require(['jquery', 'b', 'barrager'], function($, b, barrager) {
         document.getElementsByTagName('html')[0].style.fontSize = (window.innerWidth / 375) * 100 + 'px';
     }
 
+    $('#bgmbtn').click(function() {
+      if($(this).hasClass('bgmbtnyes')) {
+        bgm.pause();
+        $(this).removeClass('bgmbtnyes');
+        $(this).addClass('bgmbtnno');
+      } else {
+        bgm.play();
+        $(this).removeClass('bgmbtnno');
+        $(this).addClass('bgmbtnyes');
+      }
+    });
 
 });
