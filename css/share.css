@@ -23,10 +23,9 @@ p {
 .first-section {
   width: 80%;
   margin: 0 auto;
-  margin-top: .9rem;
-  height: 1.5rem;
+  height: 2.4rem;
   background-image: url("../imgs/first_paragraph.svg");
-  background-position: center center;
+  background-position: center .94rem;
   background-size: contain;
   background-repeat: no-repeat;
 }
@@ -141,5 +140,5 @@ p {
   border-width: 5px;
   left: 50%;
   margin-left: -5px;
-  bottom: 100%;
+  bottom: 99.5%;
 }
